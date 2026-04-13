@@ -6,23 +6,34 @@ const bcrypt = require('bcryptjs');
 const nodemailer = require('nodemailer');
 require('dotenv').config();
 
-// Nodemailer Transporter Setup
+// Nodemailer Transporter Setup - Hardened for Render
 const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true, // Use SSL/TLS
     auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS
+    },
+    tls: {
+        rejectUnauthorized: false // Helps with some cloud hosting certificate issues
     }
 });
 
 // Admin Email Alert Helper
 const sendAdminAlert = async (subject, text) => {
     try {
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
+            from: `"Feastify Engine" <${process.env.EMAIL_USER}>`,
             to: 'thirumalaivasan944@gmail.com',
             subject: `Feastify Alert: ${subject}`,
-            text: text
+            text: text,
+            html: `<div style="font-family: sans-serif; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+                    <h2 style="color: #ff5a00;">Feastify System Alert</h2>
+                    <p><strong>Event:</strong> ${subject}</p>
+                    <p>${text}</p>
+                    <hr/>
+                    <small style="color: #888;">This is an automated security notification.</small>
+                   </div>`
         };
         await transporter.sendMail(mailOptions);
         console.log(`Admin alert sent: ${subject}`);
@@ -414,6 +425,10 @@ app.post('/api/orders', async (req, res) => {
         });
         
         console.log(`New Order Created: ${newOrder._id} | Payment: ${newOrder.paymentMethod}`);
+        
+        // Notification: New Order
+        sendAdminAlert('New Order Received', `Order #${newOrder._id.slice(-6).toUpperCase()} for ₹${newOrder.totalAmount} has been placed via ${newOrder.paymentMethod}.`);
+
         res.status(201).json({ 
             success: true, 
             message: 'Order created successfully', 

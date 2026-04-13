@@ -332,12 +332,12 @@
                         <div class="text-[10px] text-gray-400 font-bold uppercase">${order.cartItems?.map(i => `${i.quantity || 1}x ${i.name}`).join(', ') || 'Item List'}</div>
                     </td>
                     <td class="px-6 py-6">
-                        <div class="font-bold text-gray-900 text-sm mb-1">${order.customerDetails?.name || 'Unknown User'}</div>
+                        <div class="font-bold text-gray-900 text-sm mb-1">${order.customerDetails?.name || order.customerName || 'Unknown User'}</div>
                         <div class="flex items-center gap-2 text-[10px] text-gray-500 font-bold uppercase mb-1">
-                            <i class="ri-phone-fill text-primary"></i> ${order.customerDetails?.phone || 'No Phone'}
+                            <i class="ri-phone-fill text-primary"></i> ${order.customerDetails?.phone || order.phone || 'No Phone'}
                         </div>
                         <div class="flex items-start gap-2 text-[10px] text-gray-400 font-medium italic">
-                            <i class="ri-map-pin-2-fill text-primary"></i> ${order.customerDetails?.address || 'No Address Provided'}
+                            <i class="ri-map-pin-2-fill text-primary"></i> ${order.customerDetails?.address || order.deliveryAddress || 'No Address Provided'}
                         </div>
                     </td>
                     <td class="px-6 py-6">
