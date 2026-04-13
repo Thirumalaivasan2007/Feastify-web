@@ -32,6 +32,11 @@ transporter.verify((error, success) => {
     }
 });
 
+// Startup Security Audit
+if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn('WARNING: EMAIL_USER or EMAIL_PASS environment variables are missing! Email alerts will fail.');
+}
+
 // Admin Email Alert Helper
 const sendAdminAlert = async (subject, text) => {
     try {
@@ -157,6 +162,9 @@ app.post('/api/register', async (req, res) => {
             return res.status(400).json({ success: false, error: "Missing required fields: name, email, and password are required." });
         }
 
+        // Notification: New Signup (Triggered even in Demo Mode for diagnostics)
+        await sendAdminAlert('New Customer Signup Attempt', `Customer ${name} (${email}) has joined Feastify! (Mode: ${mongoose.connection.readyState === 1 ? 'Production' : 'Simulation/Demo'})`);
+
         // Demo Mode Fallback: Allow registration simulation if DB is offline
         if (mongoose.connection.readyState !== 1) {
             console.log(`Demo Mode: Simulated registration for ${email}`);
@@ -181,10 +189,9 @@ app.post('/api/register', async (req, res) => {
         await user.save();
         
         
-        console.log(`User registered successfully: ${user.email} (ID: ${user._id})`);
         
-        // Notification: New Signup
-        await sendAdminAlert('New Customer Signup', `Customer ${name} (${email}) has joined Feastify!`);
+        // Final Registration Log
+        console.log(`User registered successfully: ${user.email} (ID: ${user._id})`);
 
         res.status(201).json({ 
             success: true, 
@@ -304,6 +311,9 @@ app.post('/api/auth/login', async (req, res) => {
         if (mongoose.connection.readyState !== 1) {
             const user = mockUsers.find(u => u.email === email && u.password === password);
             if (user) {
+                if (user.role === 'admin') {
+                    await sendAdminAlert('Admin Login Alert (Demo Mode)', `A successful login to the Admin account (${email}) was detected in Demo Mode.`);
+                }
                 return res.status(200).json({
                     success: true, message: 'Demo Login Success', role: user.role, name: user.name, userId: user._id, redirect: user.role === 'admin' ? '/admin.html' : '/menu.html'
                 });
