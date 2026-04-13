@@ -73,6 +73,21 @@ const App = {
         const statuses = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
         const index = statuses.indexOf(status);
         return index !== -1 ? index : 0; // Default to 0 for Pending/N/A
+    },
+
+    formatDate: (dateInput) => {
+        if (!dateInput) return 'N/A';
+        const date = new Date(dateInput);
+        if (isNaN(date.getTime())) return 'Invalid Date';
+        
+        return date.toLocaleString('en-IN', {
+            day: 'numeric',
+            month: 'short',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        });
     }
 };
 

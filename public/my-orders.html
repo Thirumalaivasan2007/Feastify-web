@@ -98,9 +98,7 @@
 
             list.innerHTML = '';
             orders.forEach(order => {
-                const date = new Date(order.createdAt).toLocaleDateString('en-IN', {
-                    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
-                });
+                const date = App.formatDate(order.timestamp);
 
                 const statusColor = getStatusColor(order.orderStatus);
 

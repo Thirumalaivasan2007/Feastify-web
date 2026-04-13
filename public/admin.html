@@ -324,6 +324,7 @@
                 row.innerHTML = `
                     <td class="px-6 py-6">
                         <div class="font-black text-gray-900 uppercase text-xs tracking-tighter mb-1">#${order._id.slice(-6)}</div>
+                        <div class="text-[9px] text-primary font-bold mb-1">${App.formatDate(order.timestamp)}</div>
                         <div class="text-[10px] text-gray-400 font-bold uppercase">${order.cartItems?.map(i => `${i.quantity || 1}x ${i.name}`).join(', ') || 'Item List'}</div>
                     </td>
                     <td class="px-6 py-6">

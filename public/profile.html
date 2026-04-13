@@ -188,7 +188,7 @@
                         <div>
                             <span class="text-[10px] font-black text-primary uppercase tracking-widest block mb-1">In Progress</span>
                             <h3 class="text-xl font-bold text-white">Order #${order._id.slice(-6).toUpperCase()}</h3>
-                            <p class="text-xs text-gray-500 mt-1">${new Date(order.createdAt || order.timestamp).toLocaleString()}</p>
+                            <p class="text-xs text-gray-500 mt-1">${App.formatDate(order.timestamp)}</p>
                         </div>
                         <div class="text-right">
                             <span class="text-2xl font-black text-white">₹${order.totalAmount.toFixed(2)}</span>
@@ -231,7 +231,7 @@
                         <div>
                             <span class="text-[10px] font-black ${isCancelled ? 'text-red-500' : 'text-green-500'} uppercase tracking-widest block mb-1">${order.orderStatus}</span>
                             <h4 class="font-bold text-white group-hover:text-primary transition-colors">Order #${order._id.slice(-6).toUpperCase()}</h4>
-                            <p class="text-[10px] text-gray-600 font-medium">${new Date(order.createdAt || order.timestamp).toLocaleDateString()}</p>
+                            <p class="text-[10px] text-gray-600 font-medium">${App.formatDate(order.timestamp)}</p>
                         </div>
                         <span class="font-black text-white">₹${order.totalAmount.toFixed(2)}</span>
                     </div>
