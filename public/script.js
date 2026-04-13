@@ -66,6 +66,13 @@ const App = {
             body: JSON.stringify(orderData)
         });
         return await res.json();
+    },
+
+    // Tracking Helper
+    getOrderStatusStep: (status) => {
+        const statuses = ['Pending', 'Preparing', 'Out for Delivery', 'Delivered'];
+        const index = statuses.indexOf(status);
+        return index !== -1 ? index : 0; // Default to 0 for Pending/N/A
     }
 };
 

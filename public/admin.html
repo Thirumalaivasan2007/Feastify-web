@@ -337,12 +337,12 @@
                     </td>
                     <td class="px-6 py-6 font-black text-gray-900 font-mono text-sm">₹${(order.totalAmount || 0).toFixed(2)}</td>
                     <td class="px-6 py-6 text-center space-x-2 flex items-center justify-center h-full pt-8">
-                        <select onchange="updateOrderStatus('${order._id}', this.value)" class="bg-gray-50 border-0 rounded-xl px-4 py-2 text-[10px] font-black uppercase text-gray-700 focus:ring-2 focus:ring-primary outline-none">
-                            <option value="Pending" ${order.orderStatus === 'Pending' ? 'selected' : ''}>Pending</option>
-                            <option value="Preparing" ${order.orderStatus === 'Preparing' ? 'selected' : ''}>Preparing</option>
-                            <option value="Out for Delivery" ${order.orderStatus === 'Out for Delivery' ? 'selected' : ''}>Out for Delivery</option>
-                            <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>Delivered</option>
-                            <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>Cancelled</option>
+                        <select onchange="updateOrderStatus('${order._id}', this.value)" class="bg-gray-50 border-0 rounded-xl px-4 py-2 text-[10px] font-black uppercase focus:ring-2 focus:ring-primary outline-none ${order.orderStatus === 'Delivered' ? 'text-green-600' : order.orderStatus === 'Cancelled' ? 'text-red-600' : 'text-gray-700'}">
+                            <option value="Pending" ${order.orderStatus === 'Pending' ? 'selected' : ''}>⏳ Pending</option>
+                            <option value="Preparing" ${order.orderStatus === 'Preparing' ? 'selected' : ''}>👨‍🍳 Preparing</option>
+                            <option value="Out for Delivery" ${order.orderStatus === 'Out for Delivery' ? 'selected' : ''}>🚚 Out for Delivery</option>
+                            <option value="Delivered" ${order.orderStatus === 'Delivered' ? 'selected' : ''}>✅ Delivered</option>
+                            <option value="Cancelled" ${order.orderStatus === 'Cancelled' ? 'selected' : ''}>❌ Cancelled</option>
                         </select>
                         <button onclick="updateOrderStatus('${order._id}', 'Cancelled')" class="text-red-500 hover:bg-red-50 p-2 rounded-lg transition-all" title="Cancel Order">
                             <i class="ri-close-circle-line text-lg"></i>
