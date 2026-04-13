@@ -121,6 +121,7 @@
     </div>
 
     <script>
+        const API_BASE_URL = 'https://food-delivery-web-yo3r.onrender.com';
         function selectRole(role) {
             document.getElementById('role-step').style.display = 'none';
             document.getElementById('auth-step').classList.add('active');
@@ -199,7 +200,7 @@
             console.log("Attempting to register:", { name, email });
 
             try {
-                const response = await fetch('/api/register', {
+                const response = await fetch(`${API_BASE_URL}/api/register`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ name, email, password })
@@ -230,7 +231,7 @@
             const role = document.getElementById('selected-role').value;
 
             try {
-                const res = await fetch('/api/auth/login', {
+                const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })

@@ -3,6 +3,8 @@
  * Shared utilities for the multi-page food app.
  */
 
+const API_BASE_URL = 'https://food-delivery-web-yo3r.onrender.com';
+
 const App = {
     // Auth Check
     checkAuth: (requiredRole = 'customer') => {
@@ -53,12 +55,12 @@ const App = {
 
     // API Helpers
     fetchFoods: async () => {
-        const res = await fetch('/api/foods');
+        const res = await fetch(`${API_BASE_URL}/api/foods`);
         return await res.json();
     },
 
     createOrder: async (orderData) => {
-        const res = await fetch('/api/orders', {
+        const res = await fetch(`${API_BASE_URL}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(orderData)

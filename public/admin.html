@@ -230,6 +230,7 @@
     </div>
 
     <script>
+        const API_BASE_URL = 'https://food-delivery-web-yo3r.onrender.com';
         // Auth Guard
         const userStr = localStorage.getItem('user');
         try {
@@ -272,13 +273,13 @@
         async function fetchDashboardData() {
             try {
                 // Fetch Orders
-                const orderRes = await fetch('/api/orders', { headers: { 'x-user-role': 'admin' } });
+                const orderRes = await fetch(`${API_BASE_URL}/api/orders`, { headers: { 'x-user-role': 'admin' } });
                 const orders = await orderRes.json();
                 renderOrders(orders);
                 checkUrgentCancellations(orders);
 
                 // Fetch Revenue Stats
-                const revRes = await fetch('/api/revenue-stats', { headers: { 'x-user-role': 'admin' } });
+                const revRes = await fetch(`${API_BASE_URL}/api/revenue-stats`, { headers: { 'x-user-role': 'admin' } });
                 const stats = await revRes.json();
                 updateRevenueUI(stats);
             } catch (err) { console.error(err); }
@@ -304,7 +305,7 @@
 
         async function dismissAlert() {
             if (activeUrgentAlert) {
-                await fetch(`/api/orders/${activeUrgentAlert}/acknowledge-cancel`, { 
+                await fetch(`${API_BASE_URL}/api/orders/${activeUrgentAlert}/acknowledge-cancel`, { 
                     method: 'POST', 
                     headers: { 'x-user-role': 'admin' } 
                 });
@@ -359,7 +360,7 @@
         async function deleteOrder(id) {
             if (!confirm('Are you sure you want to permanently delete this order? Revenue will be adjusted.')) return;
             try {
-                const res = await fetch(`/api/orders/${id}`, { 
+                const res = await fetch(`${API_BASE_URL}/api/orders/${id}`, { 
                     method: 'DELETE',
                     headers: { 'x-user-role': 'admin' }
                 });
@@ -375,7 +376,7 @@
         }
 
         async function updateOrderStatus(id, status) {
-            fetch(`/api/orders/${id}`, {
+            fetch(`${API_BASE_URL}/api/orders/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json', 'x-user-role': 'admin' },
                 body: JSON.stringify({ orderStatus: status })
@@ -393,7 +394,7 @@
 
         async function fetchCategories() {
             try {
-                const res = await fetch('/api/categories');
+                const res = await fetch(`${API_BASE_URL}/api/categories`);
                 allCategories = await res.json();
                 renderCategoryTabs();
                 updateCategorySelect();
@@ -452,7 +453,7 @@
 
         // Menu CRUD Logic
         async function fetchFoods() {
-            const res = await fetch('/api/foods');
+            const res = await fetch(`${API_BASE_URL}/api/foods`);
             allFoods = await res.json();
             renderFoodsTable(allFoods);
         }
@@ -517,7 +518,7 @@
                 tag: document.getElementById('food-tag').value
             };
 
-            const url = id ? `/api/foods/${id}` : '/api/foods';
+            const url = id ? `${API_BASE_URL}/api/foods/${id}` : `${API_BASE_URL}/api/foods`;
             const method = id ? 'PUT' : 'POST';
             
             const res = await fetch(url, {
@@ -535,7 +536,7 @@
 
         async function deleteFood(id) {
             if (!confirm('Are you sure you want to delete this dish?')) return;
-            const res = await fetch(`/api/foods/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/foods/${id}`, {
                 method: 'DELETE',
                 headers: { 'x-user-role': 'admin' }
             });
@@ -574,7 +575,7 @@
         document.getElementById('category-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const name = document.getElementById('cat-name').value;
-            const res = await fetch('/api/categories', {
+            const res = await fetch(`${API_BASE_URL}/api/categories`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', 'x-user-role': 'admin' },
                 body: JSON.stringify({ name })
@@ -594,7 +595,7 @@
             if (!newName || newName === currentName) return;
             
             try {
-                const res = await fetch(`/api/categories/${id}`, {
+                const res = await fetch(`${API_BASE_URL}/api/categories/${id}`, {
                     method: 'PUT',
                     headers: { 'Content-Type': 'application/json', 'x-user-role': 'admin' },
                     body: JSON.stringify({ name: newName })
@@ -614,7 +615,7 @@
 
         async function deleteCategory(id) {
             if (!confirm('Are you sure? This will not delete dishes, but you should reassign them.')) return;
-            const res = await fetch(`/api/categories/${id}`, {
+            const res = await fetch(`${API_BASE_URL}/api/categories/${id}`, {
                 method: 'DELETE',
                 headers: { 'x-user-role': 'admin' }
             });
