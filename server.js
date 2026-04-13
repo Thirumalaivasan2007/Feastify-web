@@ -595,6 +595,8 @@ async function syncCategories() {
                 console.log(`Auto-synced new category: ${catName}`);
             }
         }
+    } catch (err) {
+        console.error("Category sync error:", err);
     }
 }
 
