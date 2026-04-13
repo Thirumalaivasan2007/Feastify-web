@@ -23,6 +23,15 @@ const transporter = nodemailer.createTransport({
     greetingTimeout: 10000 
 });
 
+// Verify Transporter Connection on Startup
+transporter.verify((error, success) => {
+    if (error) {
+        console.error('CRITICAL: SMTP Connection Error:', error);
+    } else {
+        console.log('SUCCESS: SMTP Server is ready to take messages');
+    }
+});
+
 // Admin Email Alert Helper
 const sendAdminAlert = async (subject, text) => {
     try {
@@ -175,7 +184,7 @@ app.post('/api/register', async (req, res) => {
         console.log(`User registered successfully: ${user.email} (ID: ${user._id})`);
         
         // Notification: New Signup
-        sendAdminAlert('New Customer Signup', `Customer ${name} (${email}) has joined Feastify!`);
+        await sendAdminAlert('New Customer Signup', `Customer ${name} (${email}) has joined Feastify!`);
 
         res.status(201).json({ 
             success: true, 
@@ -318,7 +327,7 @@ app.post('/api/auth/login', async (req, res) => {
         
         // Security Notification: Admin Login
         if (user.role === 'admin') {
-            sendAdminAlert('Admin Login Alert', `A successful login to the Admin account (${email}) was detected at ${new Date().toLocaleString()}.`);
+            await sendAdminAlert('Admin Login Alert', `A successful login to the Admin account (${email}) was detected at ${new Date().toLocaleString()}.`);
         }
 
         res.status(200).json({ 
@@ -431,7 +440,7 @@ app.post('/api/orders', async (req, res) => {
         console.log(`New Order Created: ${newOrder._id} | Payment: ${newOrder.paymentMethod}`);
         
         // Notification: New Order
-        sendAdminAlert('New Order Received', `Order #${newOrder._id.toString().slice(-6).toUpperCase()} for ₹${newOrder.totalAmount} has been placed via ${newOrder.paymentMethod}.`);
+        await sendAdminAlert('New Order Received', `Order #${newOrder._id.toString().slice(-6).toUpperCase()} for ₹${newOrder.totalAmount} has been placed via ${newOrder.paymentMethod}.`);
 
         res.status(201).json({ 
             success: true, 
@@ -523,7 +532,7 @@ app.post('/api/orders/:id/customer-cancel', async (req, res) => {
         console.log(`URGENT: Order ${id} cancelled by Customer`);
 
         // Notification: Order Cancelled
-        sendAdminAlert('Order Cancelled (Action Required)', `Customer has cancelled Order #${id.slice(-6).toUpperCase()}. Please check the Admin Dashboard.`);
+        await sendAdminAlert('Order Cancelled (Action Required)', `Customer has cancelled Order #${id.slice(-6).toUpperCase()}. Please check the Admin Dashboard.`);
 
         res.status(200).json({ success: true, message: 'Order cancelled' });
     } catch (err) {
