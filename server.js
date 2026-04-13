@@ -595,8 +595,9 @@ async function syncCategories() {
                 console.log(`Auto-synced new category: ${catName}`);
             }
         }
-    } catch (err) {
-        console.error("Category sync error:", err);
+    }
+}
+
 // Admin Test Email Route (Diagnostics)
 app.get('/api/admin/test-email', async (req, res) => {
     try {
